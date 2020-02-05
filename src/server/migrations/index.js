@@ -32,7 +32,17 @@ async function createTable(model) {
 			} else if (column.type === 'decimal' && column.precision && column.scale) {
 				table.decimal(column.name, column.precision, column.scale)
 			} else if (column.type === 'string' && column.length) {
-				table.string(column.name, column.length)
+				if (column.notNullable) {
+					table.string(column.name, column.length).notNullable()
+				} else {
+					table.string(column.name, column.length)
+				}
+			} else if (column.type === 'json' || column.type === 'jsonb') {
+				if (column.notNullable) {
+					table.jsonb(column.name).notNullable()
+				} else {
+					table.jsonb(column.name)
+				}
 			} else if (column.defaultTo) {
 				table.specificType(column.name, column.type).defaultTo(column.defaultTo).notNullable()
 			} else if (column.notNullable) {
@@ -42,9 +52,11 @@ async function createTable(model) {
 			}
 		})
 
-		model.uniqueColumns.forEach(columns => {
-			table.unique(columns)
-		})
+		if (model.uniqueColumns && model.uniqueColumns.length > 0) {
+			model.uniqueColumns.forEach(columns => {
+				table.unique(columns)
+			})
+		}
 
 		table.timestamps()
 	}).catch(function(err) {

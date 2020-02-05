@@ -1,7 +1,7 @@
 import Bookshelf from '../config/db.js'
 import uuidv1 from 'uuid/v1'
 
-class ApiModel extends Bookshelf.Model{
+class BaseModel extends Bookshelf.Model{
 	static get tableName() { throw new Error('no table name defined') }
 	get tableName() { return this.constructor.tableName }
 
@@ -241,4 +241,4 @@ class ApiModel extends Bookshelf.Model{
 	}
 }
 
-export default ApiModel
+export default BaseModel

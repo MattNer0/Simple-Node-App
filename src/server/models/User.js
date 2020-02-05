@@ -1,8 +1,8 @@
 import Bookshelf from '../config/db.js'
 
-import ApiModel from './ApiModel'
+import BaseModel from './common/BaseModel'
 
-class User extends ApiModel {
+class User extends BaseModel {
 	static get tableName() { return 'User' }
 	get hasTimestamps() { return true }
 	static get tableColumns() {
@@ -13,9 +13,12 @@ class User extends ApiModel {
 				notNullable: true
 			},
 			{
-				name       : 'username',
-				type       : 'string',
-				notNullable: true
+				name: 'email',
+				type: 'string'
+			},
+			{
+				name: 'mobile',
+				type: 'string'
 			},
 			{
 				name       : 'password',
@@ -24,8 +27,13 @@ class User extends ApiModel {
 			},
 			{
 				name     : 'access_level',
-				type     : 'integer',
+				type     : 'smallint',
 				defaultTo: 0
+			},
+			{
+				name       : 'time_zone',
+				type       : 'string',
+				notNullable: true
 			},
 			{
 				name     : 'enabled',
@@ -34,6 +42,7 @@ class User extends ApiModel {
 			}
 		]
 	}
+
 	static get uniqueColumns() {
 		return ['uuid']
 	}
@@ -43,16 +52,22 @@ class User extends ApiModel {
 		]
 	}*/
 
-	//province() { return this.belongsTo('Province', 'province_id') }
-
 	static get LEVEL_USER() { return 0 }
+	static get LEVEL_COMPANY() { return 10 }
 	static get LEVEL_ADMIN() { return 100 }
 
 	/* Methods */
 
 	api_object(obj) {
 		return {
-			uuid: obj.uuid
+			user_id     : obj.id,
+			uuid        : obj.uuid,
+			email       : obj.email,
+			mobile      : obj.mobile,
+			password    : obj.password,
+			access_level: obj.access_level,
+			time_zone   : obj.time_zone,
+			enabled     : obj.enabled
 		}
 	}
 }
